@@ -1,0 +1,369 @@
+{
+  "luminosite_min": 0.12,
+  "luminosite_max": 0.97,
+  "contraste_min": 0.04,
+  "nettete_min": 4.861003351211548,
+  "couleurs_min": 600,
+  "distance_max": 1035.3591037267367,
+  "autre_fruit_min": 0.7803369164466858,
+  "visage_actif": true,
+  "modeles": {
+    "base": {
+      "confiance_min": 0.8523966073989868,
+      "entropie_max": 0.42034162342548337,
+      "energie_max": -5.503312349319459
+    },
+    "robuste": {
+      "confiance_min": 0.41803765296936035,
+      "entropie_max": 1.17708877325058,
+      "energie_max": -2.7231092166900637
+    }
+  },
+  "divergence_manipulation": 0.8090317010879632,
+  "calibre": true,
+  "rapport": {
+    "date": "2026-11-21 01:00",
+    "methode": "Seuils choisis sur la moitié A du test, évalués sur la moitié B (jamais vue)",
+    "images_valides": {
+      "train_gardien": 1500,
+      "test_A": 1349,
+      "test_B": 1349
+    },
+    "frr_cibles": {
+      "gardien": 0.02,
+      "incertitude": 0.005,
+      "autre_fruit": 0.005,
+      "qualite": 0.0025
+    },
+    "modeles": {
+      "robuste": {
+        "taux_faux_rejets": 0.08154188287620456,
+        "rejet_par_couche_valides": {
+          "luminosite_min": 0.002223869532987398,
+          "luminosite_max": 0.0,
+          "contraste": 0.0,
+          "nettete": 0.006671608598962194,
+          "couleurs": 0.0,
+          "personne": 0.007412898443291327,
+          "gardien_distance": 0.023721275018532245,
+          "autre_fruit": 0.005189028910303929,
+          "confiance": 0.005189028910303929,
+          "entropie": 0.004447739065974796,
+          "energie": 0.005189028910303929,
+          "coherence": 0.028169014084507043
+        },
+        "precision_sans_filtre": 0.9636767976278725,
+        "faux_rejets_sur_bien_classees": 0.05769230769230771,
+        "erreurs_du_modele_interceptees": 0.7142857142857143,
+        "precision_sur_acceptes": 0.9887005649717514,
+        "negatifs": {
+          "synthetiques": {
+            "n": 29,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.034482758620689655,
+              "luminosite_max": 0.034482758620689655,
+              "contraste": 0.13793103448275862,
+              "nettete": 0.13793103448275862,
+              "couleurs": 0.27586206896551724,
+              "personne": 0.0,
+              "gardien_distance": 0.896551724137931,
+              "autre_fruit": 0.0,
+              "confiance": 0.0,
+              "entropie": 0.0,
+              "energie": 0.06896551724137931,
+              "coherence": 0.4482758620689655
+            },
+            "raisons": {
+              "trop_sombre": 1,
+              "trop_claire": 1,
+              "uniforme": 2,
+              "hors_domaine": 21,
+              "dessin": 4
+            }
+          },
+          "cifar_personnes": {
+            "n": 200,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.005,
+              "luminosite_max": 0.0,
+              "contraste": 0.0,
+              "nettete": 1.0,
+              "couleurs": 0.03,
+              "personne": 0.37,
+              "gardien_distance": 1.0,
+              "autre_fruit": 0.0,
+              "confiance": 0.02,
+              "entropie": 0.035,
+              "energie": 0.08,
+              "coherence": 0.48
+            },
+            "raisons": {
+              "trop_floue": 199,
+              "trop_sombre": 1
+            }
+          },
+          "cifar_animaux": {
+            "n": 200,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.0,
+              "luminosite_max": 0.0,
+              "contraste": 0.0,
+              "nettete": 0.975,
+              "couleurs": 0.005,
+              "personne": 0.035,
+              "gardien_distance": 1.0,
+              "autre_fruit": 0.0,
+              "confiance": 0.03,
+              "entropie": 0.035,
+              "energie": 0.125,
+              "coherence": 0.365
+            },
+            "raisons": {
+              "trop_floue": 195,
+              "hors_domaine": 4,
+              "personne": 1
+            }
+          },
+          "cifar_vehicules": {
+            "n": 200,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.0,
+              "luminosite_max": 0.0,
+              "contraste": 0.0,
+              "nettete": 0.97,
+              "couleurs": 0.045,
+              "personne": 0.03,
+              "gardien_distance": 1.0,
+              "autre_fruit": 0.0,
+              "confiance": 0.0,
+              "entropie": 0.01,
+              "energie": 0.065,
+              "coherence": 0.325
+            },
+            "raisons": {
+              "trop_floue": 194,
+              "personne": 1,
+              "hors_domaine": 5
+            }
+          },
+          "cifar_autres_fruits_legumes": {
+            "n": 200,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.0,
+              "luminosite_max": 0.0,
+              "contraste": 0.005,
+              "nettete": 0.99,
+              "couleurs": 0.005,
+              "personne": 0.02,
+              "gardien_distance": 0.855,
+              "autre_fruit": 0.02,
+              "confiance": 0.075,
+              "entropie": 0.115,
+              "energie": 0.285,
+              "coherence": 0.5
+            },
+            "raisons": {
+              "trop_floue": 197,
+              "uniforme": 1,
+              "hors_domaine": 2
+            }
+          },
+          "cifar_objets_scenes": {
+            "n": 200,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.005,
+              "luminosite_max": 0.0,
+              "contraste": 0.0,
+              "nettete": 0.965,
+              "couleurs": 0.035,
+              "personne": 0.005,
+              "gardien_distance": 0.98,
+              "autre_fruit": 0.0,
+              "confiance": 0.02,
+              "entropie": 0.03,
+              "energie": 0.075,
+              "coherence": 0.46
+            },
+            "raisons": {
+              "trop_floue": 192,
+              "trop_sombre": 1,
+              "hors_domaine": 5,
+              "dessin": 2
+            }
+          }
+        }
+      },
+      "base": {
+        "taux_faux_rejets": 0.0644922164566345,
+        "rejet_par_couche_valides": {
+          "luminosite_min": 0.002223869532987398,
+          "luminosite_max": 0.0,
+          "contraste": 0.0,
+          "nettete": 0.006671608598962194,
+          "couleurs": 0.0,
+          "personne": 0.007412898443291327,
+          "gardien_distance": 0.023721275018532245,
+          "autre_fruit": 0.005189028910303929,
+          "confiance": 0.01111934766493699,
+          "entropie": 0.011860637509266123,
+          "energie": 0.00815418828762046,
+          "coherence": 0.0029651593773165306
+        },
+        "precision_sans_filtre": 0.9955522609340252,
+        "faux_rejets_sur_bien_classees": 0.06031273268801196,
+        "erreurs_du_modele_interceptees": 1.0,
+        "precision_sur_acceptes": 1.0,
+        "negatifs": {
+          "synthetiques": {
+            "n": 29,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.034482758620689655,
+              "luminosite_max": 0.034482758620689655,
+              "contraste": 0.13793103448275862,
+              "nettete": 0.13793103448275862,
+              "couleurs": 0.27586206896551724,
+              "personne": 0.0,
+              "gardien_distance": 0.896551724137931,
+              "autre_fruit": 0.0,
+              "confiance": 0.10344827586206896,
+              "entropie": 0.10344827586206896,
+              "energie": 0.13793103448275862,
+              "coherence": 0.4482758620689655
+            },
+            "raisons": {
+              "trop_sombre": 1,
+              "trop_claire": 1,
+              "uniforme": 2,
+              "hors_domaine": 21,
+              "dessin": 4
+            }
+          },
+          "cifar_personnes": {
+            "n": 200,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.005,
+              "luminosite_max": 0.0,
+              "contraste": 0.0,
+              "nettete": 1.0,
+              "couleurs": 0.03,
+              "personne": 0.37,
+              "gardien_distance": 1.0,
+              "autre_fruit": 0.0,
+              "confiance": 0.39,
+              "entropie": 0.455,
+              "energie": 0.62,
+              "coherence": 0.565
+            },
+            "raisons": {
+              "trop_floue": 199,
+              "trop_sombre": 1
+            }
+          },
+          "cifar_animaux": {
+            "n": 200,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.0,
+              "luminosite_max": 0.0,
+              "contraste": 0.0,
+              "nettete": 0.975,
+              "couleurs": 0.005,
+              "personne": 0.035,
+              "gardien_distance": 1.0,
+              "autre_fruit": 0.0,
+              "confiance": 0.49,
+              "entropie": 0.51,
+              "energie": 0.665,
+              "coherence": 0.465
+            },
+            "raisons": {
+              "trop_floue": 195,
+              "hors_domaine": 4,
+              "personne": 1
+            }
+          },
+          "cifar_vehicules": {
+            "n": 200,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.0,
+              "luminosite_max": 0.0,
+              "contraste": 0.0,
+              "nettete": 0.97,
+              "couleurs": 0.045,
+              "personne": 0.03,
+              "gardien_distance": 1.0,
+              "autre_fruit": 0.0,
+              "confiance": 0.33,
+              "entropie": 0.38,
+              "energie": 0.565,
+              "coherence": 0.39
+            },
+            "raisons": {
+              "trop_floue": 194,
+              "personne": 1,
+              "hors_domaine": 5
+            }
+          },
+          "cifar_autres_fruits_legumes": {
+            "n": 200,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.0,
+              "luminosite_max": 0.0,
+              "contraste": 0.005,
+              "nettete": 0.99,
+              "couleurs": 0.005,
+              "personne": 0.02,
+              "gardien_distance": 0.855,
+              "autre_fruit": 0.02,
+              "confiance": 0.31,
+              "entropie": 0.34,
+              "energie": 0.53,
+              "coherence": 0.535
+            },
+            "raisons": {
+              "trop_floue": 197,
+              "uniforme": 1,
+              "hors_domaine": 2
+            }
+          },
+          "cifar_objets_scenes": {
+            "n": 200,
+            "fausses_acceptations": 0.0,
+            "rejet_par_couche": {
+              "luminosite_min": 0.005,
+              "luminosite_max": 0.0,
+              "contraste": 0.0,
+              "nettete": 0.965,
+              "couleurs": 0.035,
+              "personne": 0.005,
+              "gardien_distance": 0.98,
+              "autre_fruit": 0.0,
+              "confiance": 0.405,
+              "entropie": 0.415,
+              "energie": 0.645,
+              "coherence": 0.48
+            },
+            "raisons": {
+              "trop_floue": 192,
+              "trop_sombre": 1,
+              "hors_domaine": 5,
+              "dessin": 2
+            }
+          }
+        }
+      }
+    },
+    "gardien_identifie_bon_fruit": 0.9970348406226834,
+    "visages_faux_positifs_valides": 0.007412898443291327
+  }
+}

@@ -4,23 +4,6 @@ version = "1.0.0"
 description = "API FreshRotten Guard : fruit frais ou pourri, avec défenses de sécurité de l'IA"
 requires-python = ">=3.11"
 
-[tool.ruff]
-line-length = 110
-target-version = "py311"
-extend-exclude = ["artefacts"]
-
-[tool.ruff.lint]
-select = ["E", "F", "W", "I", "B", "UP", "N", "S", "SIM", "RUF"]
-ignore = [
-  "S101",   # assert autorisé dans les tests
-  "RUF001", "RUF002", "RUF003",  # caractères typographiques français (é, ’, …)
-  "E702",
-  "N818",   # exceptions nommées en français (FichierRefuse…)
-]
-
-[tool.ruff.lint.per-file-ignores]
-"tests/**" = ["S", "N802"]
-
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 markers = [

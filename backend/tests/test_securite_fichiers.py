@@ -1,7 +1,6 @@
 """Tests unitaires de la validation des fichiers (voir aussi tests/securite/)."""
 
 import pytest
-
 from app import cas_test
 from app.securite_fichiers import FichierRefuse, detecter_format, valider_et_decoder
 

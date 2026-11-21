@@ -84,7 +84,7 @@ class ModeleFruit:
         self.nom = nom
         self.keras = modele
         derniere = modele.layers[-1]
-        self._corps = keras.Model(modele.inputs, modele.layers[-2].output)
+        self._corps = keras.Model(modele.inputs[0], modele.layers[-2].output)
         self._w, self._b = (np.asarray(v) for v in derniere.get_weights())
 
     def logits(self, x: np.ndarray) -> np.ndarray:
@@ -146,8 +146,7 @@ def charger_modeles(params: Parametres) -> Modeles:
         chemin_gardien = Path(
             keras.utils.get_file(
                 FICHIER_POIDS_GARDIEN,
-                "https://storage.googleapis.com/tensorflow/keras-applications/mobilenet_v2/"
-                + FICHIER_POIDS_GARDIEN,
+                "https://storage.googleapis.com/tensorflow/keras-applications/mobilenet_v2/" + FICHIER_POIDS_GARDIEN,
                 cache_subdir="models",
                 file_hash=EMPREINTES_PAR_DEFAUT[FICHIER_POIDS_GARDIEN],
             )

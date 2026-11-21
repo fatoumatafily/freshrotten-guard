@@ -3,11 +3,10 @@
 import io
 
 import numpy as np
-from PIL import Image
-
 from app.attaques import module_origine
 from app.cas_test import dessin_orange, image_bruit
 from app.preprocessing import tenseur_vers_image, vers_tenseur_gardien, vers_tenseur_modele
+from PIL import Image
 
 
 def _png(img: Image.Image) -> bytes:

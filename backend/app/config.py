@@ -31,9 +31,7 @@ EMPREINTES_PAR_DEFAUT: dict[str, str] = {
 class Parametres(BaseSettings):
     """Paramètres de l'application (surchargés par variables d'environnement)."""
 
-    model_config = SettingsConfigDict(
-        env_prefix="FRG_", env_file=".env", env_file_encoding="utf-8", extra="ignore"
-    )
+    model_config = SettingsConfigDict(env_prefix="FRG_", env_file=".env", env_file_encoding="utf-8", extra="ignore")
 
     # --- Modèles -----------------------------------------------------------
     dossier_modeles: Path = RACINE_PROJET / "model"

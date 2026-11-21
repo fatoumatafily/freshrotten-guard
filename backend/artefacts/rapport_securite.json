@@ -1,0 +1,811 @@
+{
+  "date": "2026-11-21 01:01:39",
+  "total": 68,
+  "reussis": 68,
+  "limites_connues": 0,
+  "resultats": [
+    {
+      "id": "test_en_tetes_securite",
+      "categorie": "Serveur web et API",
+      "menace": "En-têtes de sécurité HTTP",
+      "attendu": "CSP, nosniff, frame-ancestors, Referrer/Permissions-Policy",
+      "obtenu": "Tous les en-têtes présents, en-tête Server masqué",
+      "reussi": true,
+      "duree_ms": 3.8,
+      "details": {}
+    },
+    {
+      "id": "test_cors_restreint",
+      "categorie": "Serveur web et API",
+      "menace": "CORS : origine non autorisée",
+      "attendu": "Aucun en-tête Access-Control-Allow-Origin",
+      "obtenu": "Origine pirate refusée, origine du frontend autorisée",
+      "reussi": true,
+      "duree_ms": 3.9,
+      "details": {}
+    },
+    {
+      "id": "test_corps_trop_gros",
+      "categorie": "Serveur web et API",
+      "menace": "Corps de requête de 20 Mo",
+      "attendu": "413 avant traitement",
+      "obtenu": "HTTP 413 : Requête trop volumineuse.",
+      "reussi": true,
+      "duree_ms": 33.1,
+      "details": {}
+    },
+    {
+      "id": "test_fichier_juste_trop_gros",
+      "categorie": "Serveur web et API",
+      "menace": "Fichier de 5,5 Mo (limite 5 Mo)",
+      "attendu": "400 fichier_trop_gros",
+      "obtenu": "HTTP 413 : requete_trop_grosse",
+      "reussi": true,
+      "duree_ms": 9.2,
+      "details": {}
+    },
+    {
+      "id": "test_content_type_mensonger",
+      "categorie": "Fichiers malveillants",
+      "menace": "Exécutable envoyé avec Content-Type image/jpeg",
+      "attendu": "400 executable",
+      "obtenu": "HTTP 400 : Fichier invalide : ce n'est pas une image.",
+      "reussi": true,
+      "duree_ms": 5.4,
+      "details": {}
+    },
+    {
+      "id": "test_nom_de_fichier_malveillant[../../etc/passwd]",
+      "categorie": "Fichiers malveillants",
+      "menace": "Nom de fichier malveillant « ../../etc/passwd »",
+      "attendu": "Nom ignoré, jamais renvoyé",
+      "obtenu": "Analyse normale, nom absent de la réponse, aucun fichier créé",
+      "reussi": true,
+      "duree_ms": 832.6,
+      "details": {}
+    },
+    {
+      "id": "test_nom_de_fichier_malveillant[<script>alert(1)</script>.png]",
+      "categorie": "Fichiers malveillants",
+      "menace": "Nom de fichier malveillant « <script>alert(1)</script>.png »",
+      "attendu": "Nom ignoré, jamais renvoyé",
+      "obtenu": "Analyse normale, nom absent de la réponse, aucun fichier créé",
+      "reussi": true,
+      "duree_ms": 651.3,
+      "details": {}
+    },
+    {
+      "id": "test_nom_de_fichier_malveillant[..\\\\..\\\\win.ini]",
+      "categorie": "Fichiers malveillants",
+      "menace": "Nom de fichier malveillant « ..\\..\\win.ini »",
+      "attendu": "Nom ignoré, jamais renvoyé",
+      "obtenu": "Analyse normale, nom absent de la réponse, aucun fichier créé",
+      "reussi": true,
+      "duree_ms": 699.3,
+      "details": {}
+    },
+    {
+      "id": "test_nom_de_fichier_malveillant[aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa]",
+      "categorie": "Fichiers malveillants",
+      "menace": "Nom de fichier malveillant « aaaaaaaaaaaaaaaaaaaaaaaaaaaaaa »",
+      "attendu": "Nom ignoré, jamais renvoyé",
+      "obtenu": "Analyse normale, nom absent de la réponse, aucun fichier créé",
+      "reussi": true,
+      "duree_ms": 685.4,
+      "details": {}
+    },
+    {
+      "id": "test_aucune_image_ecrite_sur_disque",
+      "categorie": "Serveur web et API",
+      "menace": "Upload de 4 Mo (au-delà du seuil de mise sur disque par défaut de Starlette)",
+      "attendu": "Aucun basculement sur disque",
+      "obtenu": "Traitement entièrement en mémoire (0 basculement sur disque)",
+      "reussi": true,
+      "duree_ms": 1397.6,
+      "details": {}
+    },
+    {
+      "id": "test_limitation_debit_attaque",
+      "categorie": "Serveur web et API",
+      "menace": "Rafale de 13 requêtes /api/attaque en 1 minute (limite 12)",
+      "attendu": "429 à partir de la 13e",
+      "obtenu": "Codes : 12 × 200 puis 429",
+      "reussi": true,
+      "duree_ms": 5184.9,
+      "details": {}
+    },
+    {
+      "id": "test_limitation_debit_analyse_plus_souple",
+      "categorie": "Serveur web et API",
+      "menace": "Endpoints d'attaque plus limités que l'analyse",
+      "attendu": "limite attaque < limite analyse",
+      "obtenu": "attaque 12/minute, comparer 60/minute, analyse 240/minute",
+      "reussi": true,
+      "duree_ms": 0.8,
+      "details": {}
+    },
+    {
+      "id": "test_erreurs_generiques",
+      "categorie": "Serveur web et API",
+      "menace": "Messages d'erreur sans détail interne",
+      "attendu": "Aucune trace, aucun écho des entrées",
+      "obtenu": "404 → « Ressource introuvable. », 422 → « Paramètres invalides. »",
+      "reussi": true,
+      "duree_ms": 4.7,
+      "details": {}
+    },
+    {
+      "id": "test_erreur_interne_masquee",
+      "categorie": "Serveur web et API",
+      "menace": "Exception interne",
+      "attendu": "500 générique, pile d'appels seulement dans les logs",
+      "obtenu": "HTTP 500 : Erreur interne du serveur.",
+      "reussi": true,
+      "duree_ms": 2022.2,
+      "details": {}
+    },
+    {
+      "id": "test_journal_sans_image_ni_ip_claire",
+      "categorie": "Serveur web et API",
+      "menace": "Journalisation des rejets",
+      "attendu": "Événement JSON, IP hachée, ni image ni nom de fichier",
+      "obtenu": "Journal : {\"horodatage\": \"2026-11-21T01:00:48+00:00\", \"evenement\": \"rejet_fichier\", \"ip_hachee\": \"4691759eb3f1bcbf\", \"code\": \"script\", \"taille\": 34}",
+      "reussi": true,
+      "duree_ms": 6.8,
+      "details": {}
+    },
+    {
+      "id": "test_file_bornee_et_delai",
+      "categorie": "Serveur web et API",
+      "menace": "Déni de service : file d'inférence saturée / inférence trop longue",
+      "attendu": "503 immédiat",
+      "obtenu": "File pleine → serveur_occupe, délai dépassé → delai_depasse",
+      "reussi": true,
+      "duree_ms": 316.9,
+      "details": {}
+    },
+    {
+      "id": "test_demarrage_refuse_modele_altere",
+      "categorie": "Modèle et serveur",
+      "menace": "Démarrage avec un fichier .keras altéré",
+      "attendu": "Refus de charger (IntegriteCompromise)",
+      "obtenu": "Refusé : Empreinte invalide pour FreshRotten_model.keras : attendue 219baea2f4b…",
+      "reussi": true,
+      "duree_ms": 109.4,
+      "details": {}
+    },
+    {
+      "id": "test_documentation_swagger",
+      "categorie": "Serveur web et API",
+      "menace": "Documentation API (Swagger)",
+      "attendu": "Schéma OpenAPI disponible et validé",
+      "obtenu": "8 routes documentées",
+      "reussi": true,
+      "duree_ms": 20.8,
+      "details": {}
+    },
+    {
+      "id": "test_scenario[hd_noire]",
+      "categorie": "Hors domaine",
+      "menace": "Image noire",
+      "attendu": "Rejet « aucun fruit pris en charge »",
+      "obtenu": "Rejet : Image trop sombre : éclairez davantage le fruit.",
+      "reussi": true,
+      "duree_ms": 517.2,
+      "details": {
+        "code_rejet": "trop_sombre",
+        "sans_defense_le_modele_aurait_dit": "banana_fresh",
+        "confiance_brute": 0.478
+      }
+    },
+    {
+      "id": "test_scenario[hd_blanche]",
+      "categorie": "Hors domaine",
+      "menace": "Image blanche",
+      "attendu": "Rejet « aucun fruit pris en charge »",
+      "obtenu": "Rejet : Image trop claire ou surexposée.",
+      "reussi": true,
+      "duree_ms": 545.6,
+      "details": {
+        "code_rejet": "trop_claire",
+        "sans_defense_le_modele_aurait_dit": "banana_rotten",
+        "confiance_brute": 0.995
+      }
+    },
+    {
+      "id": "test_scenario[hd_grise]",
+      "categorie": "Hors domaine",
+      "menace": "Image grise uniforme",
+      "attendu": "Rejet « aucun fruit pris en charge »",
+      "obtenu": "Rejet : Image presque uniforme : aucun objet visible.",
+      "reussi": true,
+      "duree_ms": 637.6,
+      "details": {
+        "code_rejet": "uniforme",
+        "sans_defense_le_modele_aurait_dit": "orange_rotten",
+        "confiance_brute": 0.824
+      }
+    },
+    {
+      "id": "test_scenario[hd_orange_uniforme]",
+      "categorie": "Hors domaine",
+      "menace": "Aplat orange (couleur d'orange sans fruit)",
+      "attendu": "Rejet « aucun fruit pris en charge »",
+      "obtenu": "Rejet : Image presque uniforme : aucun objet visible.",
+      "reussi": true,
+      "duree_ms": 465.3,
+      "details": {
+        "code_rejet": "uniforme",
+        "sans_defense_le_modele_aurait_dit": "orange_fresh",
+        "confiance_brute": 0.982
+      }
+    },
+    {
+      "id": "test_scenario[hd_bruit]",
+      "categorie": "Hors domaine",
+      "menace": "Bruit aléatoire",
+      "attendu": "Rejet « aucun fruit pris en charge »",
+      "obtenu": "Rejet : Ce n'est pas un fruit pris en charge (pomme, banane ou orange).",
+      "reussi": true,
+      "duree_ms": 1358.6,
+      "details": {
+        "code_rejet": "hors_domaine",
+        "sans_defense_le_modele_aurait_dit": "banana_fresh",
+        "confiance_brute": 0.996
+      }
+    },
+    {
+      "id": "test_scenario[hd_capture_texte]",
+      "categorie": "Hors domaine",
+      "menace": "Capture d'écran de texte",
+      "attendu": "Rejet « aucun fruit pris en charge »",
+      "obtenu": "Rejet : Dessin ou image de synthèse détecté : seules les photos de fruits sont analysées.",
+      "reussi": true,
+      "duree_ms": 756.1,
+      "details": {
+        "code_rejet": "dessin",
+        "sans_defense_le_modele_aurait_dit": "banana_rotten",
+        "confiance_brute": 0.466
+      }
+    },
+    {
+      "id": "test_scenario[hd_dessin_banane]",
+      "categorie": "Hors domaine",
+      "menace": "Dessin animé de banane",
+      "attendu": "Rejet « aucun fruit pris en charge »",
+      "obtenu": "Rejet : Dessin ou image de synthèse détecté : seules les photos de fruits sont analysées.",
+      "reussi": true,
+      "duree_ms": 427.7,
+      "details": {
+        "code_rejet": "dessin",
+        "sans_defense_le_modele_aurait_dit": "banana_rotten",
+        "confiance_brute": 0.503
+      }
+    },
+    {
+      "id": "test_scenario[hd_dessin_orange]",
+      "categorie": "Hors domaine",
+      "menace": "Dessin animé d'orange",
+      "attendu": "Rejet « aucun fruit pris en charge »",
+      "obtenu": "Rejet : Dessin ou image de synthèse détecté : seules les photos de fruits sont analysées.",
+      "reussi": true,
+      "duree_ms": 509.1,
+      "details": {
+        "code_rejet": "dessin",
+        "sans_defense_le_modele_aurait_dit": "orange_fresh",
+        "confiance_brute": 0.959
+      }
+    },
+    {
+      "id": "test_scenario[hd_visage_schematique]",
+      "categorie": "Hors domaine",
+      "menace": "Visage (schématique)",
+      "attendu": "Rejet « aucun fruit pris en charge »",
+      "obtenu": "Rejet : Dessin ou image de synthèse détecté : seules les photos de fruits sont analysées.",
+      "reussi": true,
+      "duree_ms": 457.6,
+      "details": {
+        "code_rejet": "dessin",
+        "sans_defense_le_modele_aurait_dit": "banana_rotten",
+        "confiance_brute": 0.441
+      }
+    },
+    {
+      "id": "test_scenario[valide_apple_fresh]",
+      "categorie": "Fruits valides (contrôle)",
+      "menace": "Photo valide : apple_fresh",
+      "attendu": "Accepté : apple_fresh",
+      "obtenu": "Accepté : apple_fresh (0.928)",
+      "reussi": true,
+      "duree_ms": 657.2,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[valide_apple_rotten]",
+      "categorie": "Fruits valides (contrôle)",
+      "menace": "Photo valide : apple_rotten",
+      "attendu": "Accepté : apple_rotten",
+      "obtenu": "Accepté : apple_rotten (0.955)",
+      "reussi": true,
+      "duree_ms": 427.8,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[valide_banana_fresh]",
+      "categorie": "Fruits valides (contrôle)",
+      "menace": "Photo valide : banana_fresh",
+      "attendu": "Accepté : banana_fresh",
+      "obtenu": "Accepté : banana_fresh (0.998)",
+      "reussi": true,
+      "duree_ms": 508.2,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[valide_banana_rotten]",
+      "categorie": "Fruits valides (contrôle)",
+      "menace": "Photo valide : banana_rotten",
+      "attendu": "Accepté : banana_rotten",
+      "obtenu": "Accepté : banana_rotten (1.0)",
+      "reussi": true,
+      "duree_ms": 698.5,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[valide_orange_fresh]",
+      "categorie": "Fruits valides (contrôle)",
+      "menace": "Photo valide : orange_fresh",
+      "attendu": "Accepté : orange_fresh",
+      "obtenu": "Accepté : orange_fresh (0.997)",
+      "reussi": true,
+      "duree_ms": 933.4,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[valide_orange_rotten]",
+      "categorie": "Fruits valides (contrôle)",
+      "menace": "Photo valide : orange_rotten",
+      "attendu": "Accepté : orange_rotten",
+      "obtenu": "Accepté : orange_rotten (0.706)",
+      "reussi": true,
+      "duree_ms": 858.5,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[fichier_faux_exe_jpg]",
+      "categorie": "Fichiers malveillants",
+      "menace": "Exécutable .exe renommé en .jpg",
+      "attendu": "Refusé (executable)",
+      "obtenu": "Refusé (executable) : Fichier invalide : ce n'est pas une image.",
+      "reussi": true,
+      "duree_ms": 1.7,
+      "details": {
+        "taille_octets": 128
+      }
+    },
+    {
+      "id": "test_scenario[fichier_faux_php_jpg]",
+      "categorie": "Fichiers malveillants",
+      "menace": "Script PHP renommé en .jpg",
+      "attendu": "Refusé (script)",
+      "obtenu": "Refusé (script) : Fichier invalide : ce n'est pas une image.",
+      "reussi": true,
+      "duree_ms": 3.9,
+      "details": {
+        "taille_octets": 34
+      }
+    },
+    {
+      "id": "test_scenario[fichier_faux_html_jpg]",
+      "categorie": "Fichiers malveillants",
+      "menace": "Page HTML renommée en .jpg",
+      "attendu": "Refusé (script)",
+      "obtenu": "Refusé (script) : Fichier invalide : ce n'est pas une image.",
+      "reussi": true,
+      "duree_ms": 1.6,
+      "details": {
+        "taille_octets": 77
+      }
+    },
+    {
+      "id": "test_scenario[fichier_svg_script_svg]",
+      "categorie": "Fichiers malveillants",
+      "menace": "SVG contenant un script",
+      "attendu": "Refusé (svg_refuse)",
+      "obtenu": "Refusé (svg_refuse) : Les images SVG ne sont pas acceptées.",
+      "reussi": true,
+      "duree_ms": 1.7,
+      "details": {
+        "taille_octets": 169
+      }
+    },
+    {
+      "id": "test_scenario[fichier_gif_anime_gif]",
+      "categorie": "Fichiers malveillants",
+      "menace": "GIF animé",
+      "attendu": "Refusé (gif_refuse)",
+      "obtenu": "Refusé (gif_refuse) : Les GIF ne sont pas acceptés (utilisez JPEG, PNG ou WebP).",
+      "reussi": true,
+      "duree_ms": 7.0,
+      "details": {
+        "taille_octets": 447
+      }
+    },
+    {
+      "id": "test_scenario[fichier_webp_anime_webp]",
+      "categorie": "Fichiers malveillants",
+      "menace": "WebP animé",
+      "attendu": "Refusé (image_animee)",
+      "obtenu": "Refusé (image_animee) : Les images animées ne sont pas acceptées.",
+      "reussi": true,
+      "duree_ms": 138.4,
+      "details": {
+        "taille_octets": 264
+      }
+    },
+    {
+      "id": "test_scenario[fichier_bombe_decompression_png]",
+      "categorie": "Fichiers malveillants",
+      "menace": "Bombe de décompression (50 000 × 50 000 px)",
+      "attendu": "Refusé (bombe_decompression)",
+      "obtenu": "Refusé (bombe_decompression) : Image refusée : dimensions trop grandes.",
+      "reussi": true,
+      "duree_ms": 5508.6,
+      "details": {
+        "taille_octets": 303851
+      }
+    },
+    {
+      "id": "test_scenario[fichier_polyglotte_jpeg_zip_jpg]",
+      "categorie": "Fichiers malveillants",
+      "menace": "Polyglotte JPEG + ZIP",
+      "attendu": "Refusé (polyglotte)",
+      "obtenu": "Refusé (polyglotte) : Fichier invalide : contenu suspect détecté dans l'image.",
+      "reussi": true,
+      "duree_ms": 6.4,
+      "details": {
+        "taille_octets": 5813
+      }
+    },
+    {
+      "id": "test_scenario[fichier_polyglotte_jpeg_html_jpg]",
+      "categorie": "Fichiers malveillants",
+      "menace": "Polyglotte JPEG + HTML",
+      "attendu": "Refusé (polyglotte)",
+      "obtenu": "Refusé (polyglotte) : Fichier invalide : contenu suspect détecté dans l'image.",
+      "reussi": true,
+      "duree_ms": 9.7,
+      "details": {
+        "taille_octets": 5846
+      }
+    },
+    {
+      "id": "test_scenario[fichier_png_script_texte_png]",
+      "categorie": "Fichiers malveillants",
+      "menace": "PNG avec <script> dans les métadonnées",
+      "attendu": "Refusé (polyglotte)",
+      "obtenu": "Refusé (polyglotte) : Fichier invalide : contenu suspect détecté dans l'image.",
+      "reussi": true,
+      "duree_ms": 6.6,
+      "details": {
+        "taille_octets": 3991
+      }
+    },
+    {
+      "id": "test_scenario[fichier_jpeg_tronque_jpg]",
+      "categorie": "Fichiers malveillants",
+      "menace": "JPEG tronqué",
+      "attendu": "Refusé (fichier_corrompu)",
+      "obtenu": "Refusé (fichier_corrompu) : Fichier invalide ou corrompu.",
+      "reussi": true,
+      "duree_ms": 19.1,
+      "details": {
+        "taille_octets": 38748
+      }
+    },
+    {
+      "id": "test_scenario[fichier_jpeg_corrompu_jpg]",
+      "categorie": "Fichiers malveillants",
+      "menace": "JPEG corrompu",
+      "attendu": "Refusé (fichier_corrompu)",
+      "obtenu": "Refusé (fichier_corrompu) : Fichier invalide ou corrompu.",
+      "reussi": true,
+      "duree_ms": 35.2,
+      "details": {
+        "taille_octets": 77496
+      }
+    },
+    {
+      "id": "test_scenario[format_png_transparent_png]",
+      "categorie": "Formats particuliers",
+      "menace": "Png transparent",
+      "attendu": "Accepté, RGB 8 bits, métadonnées supprimées",
+      "obtenu": "Accepté, converti en RGB (transparence_aplatie_sur_blanc)",
+      "reussi": true,
+      "duree_ms": 10.2,
+      "details": {
+        "alertes": [
+          "transparence_aplatie_sur_blanc"
+        ]
+      }
+    },
+    {
+      "id": "test_scenario[format_jpeg_cmjn_jpg]",
+      "categorie": "Formats particuliers",
+      "menace": "Jpeg cmjn",
+      "attendu": "Accepté, RGB 8 bits, métadonnées supprimées",
+      "obtenu": "Accepté, converti en RGB (cmjn_converti)",
+      "reussi": true,
+      "duree_ms": 18.0,
+      "details": {
+        "alertes": [
+          "cmjn_converti"
+        ]
+      }
+    },
+    {
+      "id": "test_scenario[format_png_gris_png]",
+      "categorie": "Formats particuliers",
+      "menace": "Png gris",
+      "attendu": "Accepté, RGB 8 bits, métadonnées supprimées",
+      "obtenu": "Accepté, converti en RGB (aucune alerte)",
+      "reussi": true,
+      "duree_ms": 10.5,
+      "details": {
+        "alertes": []
+      }
+    },
+    {
+      "id": "test_scenario[format_png_16_bits_png]",
+      "categorie": "Formats particuliers",
+      "menace": "Png 16 bits",
+      "attendu": "Accepté, RGB 8 bits, métadonnées supprimées",
+      "obtenu": "Accepté, converti en RGB (profondeur_16_bits_convertie)",
+      "reussi": true,
+      "duree_ms": 13.1,
+      "details": {
+        "alertes": [
+          "profondeur_16_bits_convertie"
+        ]
+      }
+    },
+    {
+      "id": "test_scenario[format_jpeg_exif_oriente_jpg]",
+      "categorie": "Formats particuliers",
+      "menace": "Jpeg exif oriente",
+      "attendu": "Accepté, RGB 8 bits, métadonnées supprimées",
+      "obtenu": "Accepté, converti en RGB (metadonnees_exif_supprimees, orientation_exif_appliquee)",
+      "reussi": true,
+      "duree_ms": 3.1,
+      "details": {
+        "alertes": [
+          "metadonnees_exif_supprimees",
+          "orientation_exif_appliquee"
+        ]
+      }
+    },
+    {
+      "id": "test_scenario[adv_pgd_base]",
+      "categorie": "Attaques adversariales",
+      "menace": "PGD ε=0,03 contre le modèle de base",
+      "attendu": "Le modèle de base est trompé",
+      "obtenu": "Trompé : prédit apple_rotten (1.00)",
+      "reussi": true,
+      "duree_ms": 3209.2,
+      "details": {
+        "epsilon": 0.03,
+        "classe_vraie": "apple_fresh"
+      }
+    },
+    {
+      "id": "test_scenario[adv_pgd_robuste]",
+      "categorie": "Attaques adversariales",
+      "menace": "PGD ε=0,03 contre le modèle robuste",
+      "attendu": "Le modèle robuste résiste",
+      "obtenu": "Résiste : prédit apple_fresh (0.55)",
+      "reussi": true,
+      "duree_ms": 1829.5,
+      "details": {
+        "epsilon": 0.03,
+        "classe_vraie": "apple_fresh"
+      }
+    },
+    {
+      "id": "test_scenario[adv_ciblee_base]",
+      "categorie": "Attaques adversariales",
+      "menace": "PGD ciblée : banane pourrie → « fraîche » (base)",
+      "attendu": "Le modèle de base est trompé (cible atteinte)",
+      "obtenu": "Cible atteinte : prédit banana_fresh (0.53)",
+      "reussi": true,
+      "duree_ms": 3612.2,
+      "details": {
+        "cible": "banana_fresh"
+      }
+    },
+    {
+      "id": "test_scenario[adv_ciblee_robuste]",
+      "categorie": "Attaques adversariales",
+      "menace": "PGD ciblée : banane pourrie → « fraîche » (robuste)",
+      "attendu": "Le modèle robuste résiste (cible manquée)",
+      "obtenu": "Cible manquée : prédit banana_rotten (1.00)",
+      "reussi": true,
+      "duree_ms": 2533.7,
+      "details": {
+        "cible": "banana_fresh"
+      }
+    },
+    {
+      "id": "test_scenario[adv_detection]",
+      "categorie": "Attaques adversariales",
+      "menace": "Détection d'une image adverse (base, PGD ε=0,03)",
+      "attendu": "Image signalée (manipulée) ou rejetée",
+      "obtenu": "Signalée (ok, alertes : ['image_possiblement_manipulee'])",
+      "reussi": true,
+      "duree_ms": 2225.2,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[adv_purification]",
+      "categorie": "Attaques adversariales",
+      "menace": "Purification JPEG contre FGSM ε=0,01 (base)",
+      "attendu": "Prédiction correcte restaurée",
+      "obtenu": "Sans purification : apple_fresh → avec JPEG : apple_fresh (1.00)",
+      "reussi": true,
+      "duree_ms": 296.5,
+      "details": {
+        "epsilon": 0.01
+      }
+    },
+    {
+      "id": "test_scenario[couleur_teinte]",
+      "categorie": "Manipulation des couleurs",
+      "menace": "Décalage de teinte : banane pourrie « rafraîchie »",
+      "attendu": "Pas classée « fraîche » (pourrie ou rejet)",
+      "obtenu": "Accepté : banana_rotten (1.0)",
+      "reussi": true,
+      "duree_ms": 488.9,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[naturel_flip]",
+      "categorie": "Robustesse naturelle",
+      "menace": "Miroir horizontal (orange pourrie)",
+      "attendu": "Toujours « orange_rotten »",
+      "obtenu": "Accepté : orange_rotten (0.696)",
+      "reussi": true,
+      "duree_ms": 1357.7,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[naturel_rotation]",
+      "categorie": "Robustesse naturelle",
+      "menace": "Rotation 20° (orange pourrie)",
+      "attendu": "Toujours « orange_rotten »",
+      "obtenu": "Accepté : orange_rotten (0.532)",
+      "reussi": true,
+      "duree_ms": 961.2,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[naturel_luminosite]",
+      "categorie": "Robustesse naturelle",
+      "menace": "Luminosité −35 % (orange pourrie)",
+      "attendu": "Toujours « orange_rotten »",
+      "obtenu": "Accepté : orange_rotten (0.654)",
+      "reussi": true,
+      "duree_ms": 943.5,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[naturel_contraste]",
+      "categorie": "Robustesse naturelle",
+      "menace": "Contraste +50 % (orange pourrie)",
+      "attendu": "Toujours « orange_rotten »",
+      "obtenu": "Accepté : orange_rotten (0.548)",
+      "reussi": true,
+      "duree_ms": 817.7,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[naturel_flou]",
+      "categorie": "Robustesse naturelle",
+      "menace": "Flou gaussien r=2 (orange pourrie)",
+      "attendu": "Toujours « orange_rotten »",
+      "obtenu": "Accepté : orange_rotten (0.707)",
+      "reussi": true,
+      "duree_ms": 633.3,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[naturel_bruit]",
+      "categorie": "Robustesse naturelle",
+      "menace": "Bruit gaussien σ=12 (orange pourrie)",
+      "attendu": "Toujours « orange_rotten »",
+      "obtenu": "Accepté : orange_rotten (0.657)",
+      "reussi": true,
+      "duree_ms": 583.1,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[naturel_jpeg]",
+      "categorie": "Robustesse naturelle",
+      "menace": "Compression JPEG forte (q=15) (orange pourrie)",
+      "attendu": "Toujours « orange_rotten »",
+      "obtenu": "Accepté : orange_rotten (0.68)",
+      "reussi": true,
+      "duree_ms": 492.4,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[naturel_recadrage]",
+      "categorie": "Robustesse naturelle",
+      "menace": "Recadrage 80 % centré (orange pourrie)",
+      "attendu": "Toujours « orange_rotten »",
+      "obtenu": "Accepté : orange_rotten (0.796)",
+      "reussi": true,
+      "duree_ms": 630.5,
+      "details": {
+        "code_rejet": null
+      }
+    },
+    {
+      "id": "test_scenario[extraction_modele]",
+      "categorie": "Modèle et serveur",
+      "menace": "Extraction du modèle (fuite d'information)",
+      "attendu": "Probabilités arrondies, aucun logit",
+      "obtenu": "Probabilités à 3 décimales max, logits exposés : non",
+      "reussi": true,
+      "duree_ms": 400.8,
+      "details": {}
+    },
+    {
+      "id": "test_scenario[integrite_modele]",
+      "categorie": "Modèle et serveur",
+      "menace": "Fichier modèle altéré (1 octet)",
+      "attendu": "Altération détectée",
+      "obtenu": "Empreinte modifiée détectée (b1792d6bc3c4…)",
+      "reussi": true,
+      "duree_ms": 32.8,
+      "details": {}
+    },
+    {
+      "id": "test_scenario[modele_lambda]",
+      "categorie": "Modèle et serveur",
+      "menace": "Modèle piégé (couche Lambda = code arbitraire)",
+      "attendu": "Chargement refusé",
+      "obtenu": "Chargement refusé (ValueError)",
+      "reussi": true,
+      "duree_ms": 1433.6,
+      "details": {}
+    }
+  ]
+}

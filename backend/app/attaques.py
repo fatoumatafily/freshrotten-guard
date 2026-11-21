@@ -68,9 +68,7 @@ def attaquer(
     elif type_attaque == "pgd_ciblee":
         if indice_cible is None:
             raise ValueError("Une classe cible est requise pour PGD ciblée")
-        x_adv = orig.pgd(
-            modele.keras, x, orig.one_hot(indice_cible, nb_classes), epsilon, steps=etapes, cible=True
-        )
+        x_adv = orig.pgd(modele.keras, x, orig.one_hot(indice_cible, nb_classes), epsilon, steps=etapes, cible=True)
     else:  # pragma: no cover — garanti par la validation Pydantic
         raise ValueError(f"Attaque inconnue : {type_attaque}")
     x_adv = np.asarray(x_adv, dtype="float32")

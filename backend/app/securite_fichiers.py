@@ -154,9 +154,7 @@ def valider_et_decoder(
     if not octets:
         raise FichierRefuse("fichier_vide", "Fichier vide.")
     if len(octets) > taille_max:
-        raise FichierRefuse(
-            "fichier_trop_gros", f"Fichier trop volumineux (max {taille_max // (1024 * 1024)} Mo)."
-        )
+        raise FichierRefuse("fichier_trop_gros", f"Fichier trop volumineux (max {taille_max // (1024 * 1024)} Mo).")
 
     fmt = detecter_format(octets)
     if fmt is None:
