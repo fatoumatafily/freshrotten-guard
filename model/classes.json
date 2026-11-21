@@ -1,0 +1,19 @@
+{
+ "classes": [
+  "apple_fresh",
+  "apple_rotten",
+  "banana_fresh",
+  "banana_rotten",
+  "orange_fresh",
+  "orange_rotten"
+ ],
+ "img_size": [
+  128,
+  128
+ ],
+ "pretraitement": "RGB, redimensionnement img_size (NEAREST), pixels / 255",
+ "eps_attaque": 0.03,
+ "pgd_steps": 10,
+ "train_images": 9265,
+ "test_images": 2698
+}
