@@ -377,13 +377,14 @@ _ajouter(
 
 def _scenario_purification(ctx: Contexte):
     x = _x("apple_fresh")
-    adv = attaquer(ctx.modeles.fruits["base"], x, "fgsm", 0.01, 0).x_adv
+    adv = attaquer(ctx.modeles.fruits["base"], x, "pgd", 0.02, 0).x_adv
     avant, _ = _classe(ctx, "base", adv)
     apres, conf = _classe(ctx, "base", purifier(adv, "jpeg"))
+    # Le scénario n'a de sens que si l'attaque trompe d'abord le modèle.
     return (
         f"Sans purification : {avant} → avec JPEG : {apres} ({conf:.2f})",
-        apres == "apple_fresh",
-        {"epsilon": 0.01},
+        avant != "apple_fresh" and apres == "apple_fresh",
+        {"epsilon": 0.02, "attaque_reussie_sans_defense": avant != "apple_fresh"},
     )
 
 
@@ -391,9 +392,10 @@ _ajouter(
     Definition(
         id="adv_purification",
         categorie="Attaques adversariales",
-        titre="Purification JPEG contre FGSM ε=0,01 (base)",
-        description="Une légère compression JPEG efface une partie des perturbations de faible amplitude.",
-        attendu="Prédiction correcte restaurée",
+        titre="Purification JPEG contre PGD ε=0,02 (base)",
+        description="L'attaque trompe d'abord le modèle ; une légère compression JPEG efface la perturbation "
+        "(attaquant qui ignore la défense).",
+        attendu="Trompé sans défense, prédiction correcte restaurée avec JPEG",
         executer=_scenario_purification,
         disponible=_fruit_dispo("apple_fresh"),
     )
