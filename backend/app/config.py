@@ -31,7 +31,9 @@ EMPREINTES_PAR_DEFAUT: dict[str, str] = {
 class Parametres(BaseSettings):
     """Paramètres de l'application (surchargés par variables d'environnement)."""
 
-    model_config = SettingsConfigDict(env_prefix="FRG_", env_file=".env", env_file_encoding="utf-8", extra="ignore")
+    model_config = SettingsConfigDict(
+        env_prefix="FRG_", env_file=RACINE_PROJET / ".env", env_file_encoding="utf-8", extra="ignore"
+    )
 
     # --- Modèles -----------------------------------------------------------
     dossier_modeles: Path = RACINE_PROJET / "model"
@@ -58,6 +60,15 @@ class Parametres(BaseSettings):
     decimales_probabilites: int = Field(default=3, ge=1, le=6)
     sel_hachage_ip: str = Field(default_factory=lambda: secrets.token_hex(16))
     documentation_api: bool = True
+
+    # --- Authentification ---------------------------------------------------
+    authentification: bool = True
+    # {"identifiant": "scrypt$..."} — généré par scripts/creer_compte.py, jamais de mot de passe en clair.
+    comptes: dict[str, str] = Field(default_factory=dict)
+    # Clé de signature des jetons. Si absente : générée au démarrage (sessions perdues au redémarrage).
+    secret_session: str = Field(default_factory=lambda: secrets.token_hex(32))
+    duree_session_min: int = Field(default=480, ge=5, le=7 * 24 * 60)
+    limite_connexion: str = "5/minute"
 
     # --- Défenses ----------------------------------------------------------
     purification_par_defaut: bool = False

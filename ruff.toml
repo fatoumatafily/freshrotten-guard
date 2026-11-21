@@ -16,3 +16,7 @@ ignore = [
 "**/tests/**" = ["S", "N802"]
 "scripts/**" = ["S311", "E501"]
 
+
+[lint.flake8-bugbear]
+# Idiome FastAPI : Depends/Query/File/Form en valeur par défaut.
+extend-immutable-calls = ["fastapi.Depends", "fastapi.Query", "fastapi.File", "fastapi.Form"]

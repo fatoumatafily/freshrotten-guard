@@ -31,7 +31,8 @@ from .schemas import (
     TypeAttaque,
 )
 
-routeur = APIRouter(prefix="/api")
+routeur = APIRouter(prefix="/api")  # routes protégées (jeton requis, cf. main.py)
+routeur_public = APIRouter(prefix="/api")  # routes accessibles sans connexion
 # Une attaque ciblée doit atteindre UNE classe précise : 20 pas au lieu de 10 (mesuré : 10 pas
 # ne suffisent pas toujours contre le modèle de base à ε = 0,03).
 ETAPES_CIBLEE = 20
@@ -257,7 +258,7 @@ async def route_rapport(request: Request) -> dict:
     return rapport
 
 
-@routeur.get("/sante", response_model=EtatSante, tags=["Service"])
+@routeur_public.get("/sante", response_model=EtatSante, tags=["Service"])
 async def route_sante(request: Request) -> EtatSante:
     """État du service et des modèles chargés (sans détail sensible)."""
     ctx = _ctx(request)

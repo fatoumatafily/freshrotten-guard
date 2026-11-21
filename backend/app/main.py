@@ -9,7 +9,7 @@ import logging
 from collections.abc import AsyncIterator
 from contextlib import asynccontextmanager
 
-from fastapi import FastAPI, Request
+from fastapi import Depends, FastAPI, Request
 from fastapi.exceptions import RequestValidationError
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import JSONResponse
@@ -20,7 +20,9 @@ from starlette.formparsers import MultiPartParser
 from . import ood
 from .api.limites import limiteur
 from .api.middlewares import EnTetesSecurite, LimiteTailleCorps
-from .api.routes import routeur
+from .api.routes import routeur, routeur_public
+from .api.routes_auth import routeur_auth
+from .auth import exiger_session
 from .config import parametres
 from .execution import Executeur
 from .inference import charger_modeles
@@ -39,6 +41,8 @@ async def cycle_de_vie(app: FastAPI) -> AsyncIterator[None]:
     modeles = charger_modeles(params)
     stats = ood.StatsGardien.charger(params.fichier_stats_ood)
     seuils = ood.Seuils.charger(params.fichier_seuils)
+    if params.authentification and not params.comptes:
+        journal.warning("Authentification active mais AUCUN compte : créez-en un avec scripts/creer_compte.py")
     if stats is None or not seuils.calibre:
         journal.warning("Seuils hors domaine NON CALIBRÉS : lancez scripts/calibrer_seuils.py")
     app.state.ctx = Contexte(modeles=modeles, params=params, gardien=stats, seuils=seuils)
@@ -75,7 +79,7 @@ def creer_application() -> FastAPI:
         CORSMiddleware,
         allow_origins=params.origines_cors,
         allow_methods=["GET", "POST"],
-        allow_headers=["Content-Type"],
+        allow_headers=["Content-Type", "Authorization"],
         allow_credentials=False,
         max_age=600,
     )
@@ -117,7 +121,10 @@ def creer_application() -> FastAPI:
         journal.exception("Erreur interne sur %s", request.url.path)
         return JSONResponse({"detail": "Erreur interne du serveur.", "code": "erreur_interne"}, status_code=500)
 
-    app.include_router(routeur)
+    app.include_router(routeur_public)
+    app.include_router(routeur_auth)
+    # Toutes les autres routes exigent un jeton de session valide.
+    app.include_router(routeur, dependencies=[Depends(exiger_session)])
     return app
 
 

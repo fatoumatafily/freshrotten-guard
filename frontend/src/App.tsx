@@ -1,9 +1,11 @@
 // Coque de l'application : en-tête, onglets accessibles, thème, état du serveur.
-import { Camera, FlaskConical, Info, Moon, ServerOff, ShieldCheck, Sun, Upload } from "lucide-react";
+import { Camera, FlaskConical, Info, LogOut, Moon, ServerOff, ShieldCheck, Sun, Upload } from "lucide-react";
 import { Suspense, lazy, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { api } from "./api/client";
 import type { EtatSante } from "./api/types";
+import { EVENEMENT_DECONNEXION, effacerSession, lireSession, type Session } from "./lib/session";
 import { PageAPropos } from "./pages/PageAPropos";
+import { PageConnexion } from "./pages/PageConnexion";
 import { PageAnalyse } from "./pages/PageAnalyse";
 import { PageWebcam } from "./pages/PageWebcam";
 import { Squelette } from "./composants/Messages";
@@ -21,8 +23,58 @@ const ONGLETS = [
 type IdOnglet = (typeof ONGLETS)[number]["id"];
 
 export default function App() {
-  const [onglet, setOnglet] = useState<IdOnglet>("analyse");
   const [theme, basculerTheme] = useTheme();
+  const [session, setSession] = useState<Session | null>(lireSession);
+  const [message, setMessage] = useState<string | null>(null);
+
+  useEffect(() => {
+    const expiree = () => {
+      setSession(null);
+      setMessage("Votre session a expiré : reconnectez-vous.");
+    };
+    window.addEventListener(EVENEMENT_DECONNEXION, expiree);
+    return () => window.removeEventListener(EVENEMENT_DECONNEXION, expiree);
+  }, []);
+
+  if (!session) {
+    return (
+      <PageConnexion
+        theme={theme}
+        basculerTheme={basculerTheme}
+        message={message}
+        onConnecte={(s) => {
+          setMessage(null);
+          setSession(s);
+        }}
+      />
+    );
+  }
+  return (
+    <Application
+      theme={theme}
+      basculerTheme={basculerTheme}
+      session={session}
+      onDeconnexion={() => {
+        effacerSession();
+        setMessage("Vous êtes déconnecté.");
+        setSession(null);
+      }}
+    />
+  );
+}
+
+function Application({
+  theme,
+  basculerTheme,
+  session,
+  onDeconnexion,
+}: {
+  theme: ReturnType<typeof useTheme>[0];
+  basculerTheme: () => void;
+  session: Session;
+  onDeconnexion: () => void;
+}) {
+  const [onglet, setOnglet] = useState<IdOnglet>("analyse");
   const [sante, setSante] = useState<EtatSante | null | "hors_ligne">(null);
   const refs = useRef<Record<string, HTMLButtonElement | null>>({});
 
@@ -61,10 +113,20 @@ export default function App() {
             </div>
           </div>
           <IndicateurServeur sante={sante} />
+          <span className="ml-auto hidden text-sm text-slate-600 sm:inline dark:text-slate-300">
+            Connecté : <strong>{session.identifiant}</strong>
+          </span>
+          <button
+            type="button"
+            onClick={onDeconnexion}
+            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-bouclier-500 dark:text-slate-200 dark:ring-slate-700 dark:hover:bg-slate-800"
+          >
+            <LogOut size={16} aria-hidden="true" /> Se déconnecter
+          </button>
           <button
             type="button"
             onClick={basculerTheme}
-            className="ml-auto rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-bouclier-500 dark:text-slate-300 dark:hover:bg-slate-800"
+            className="rounded-lg p-2 text-slate-600 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-bouclier-500 dark:text-slate-300 dark:hover:bg-slate-800"
             aria-label={theme === "sombre" ? "Passer en mode clair" : "Passer en mode sombre"}
           >
             {theme === "sombre" ? <Sun aria-hidden="true" /> : <Moon aria-hidden="true" />}

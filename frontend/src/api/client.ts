@@ -1,4 +1,5 @@
-// Client HTTP typé. Toutes les requêtes passent par /api (même origine : proxy Vite ou Nginx).
+// Client HTTP typé. En local, /api est relayé par Vite (même origine) ; en production,
+// VITE_API_URL pointe vers le backend (ex. https://xxx.hf.space), autorisé par CORS.
 import type {
   EtatSante,
   Metriques,
@@ -14,6 +15,9 @@ import type {
   Scenario,
   TypeAttaque,
 } from "./types";
+import { EVENEMENT_DECONNEXION, effacerSession, jetonCourant, type Session } from "../lib/session";
+
+const BASE_API = (import.meta.env.VITE_API_URL ?? "").replace(/\/+$/, "");
 
 export class ErreurApi extends Error {
   readonly code: string;
@@ -27,6 +31,7 @@ export class ErreurApi extends Error {
 
 const MESSAGES_STATUT: Record<number, string> = {
   413: "Fichier trop volumineux.",
+  401: "Authentification requise.",
   429: "Trop de requêtes : patientez quelques secondes.",
   503: "Serveur occupé : réessayez dans un instant.",
 };
@@ -34,7 +39,10 @@ const MESSAGES_STATUT: Record<number, string> = {
 async function requete<T>(chemin: string, init?: RequestInit & { signal?: AbortSignal }): Promise<T> {
   let reponse: Response;
   try {
-    reponse = await fetch(`/api${chemin}`, { ...init, credentials: "omit" });
+    const jeton = jetonCourant();
+    const enTetes = new Headers(init?.headers);
+    if (jeton) enTetes.set("Authorization", `Bearer ${jeton}`);
+    reponse = await fetch(`${BASE_API}/api${chemin}`, { ...init, headers: enTetes, credentials: "omit" });
   } catch (e) {
     if (e instanceof DOMException && e.name === "AbortError") throw e;
     throw new ErreurApi("Serveur injoignable : vérifiez que le backend est lancé.", "serveur_indisponible", 0);
@@ -48,6 +56,11 @@ async function requete<T>(chemin: string, init?: RequestInit & { signal?: AbortS
       if (typeof corps.code === "string") code = corps.code;
     } catch {
       /* corps non JSON : message générique */
+    }
+    if (reponse.status === 401 && code === "non_authentifie") {
+      // Jeton absent, expiré ou invalide : retour à la page de connexion.
+      effacerSession();
+      window.dispatchEvent(new Event(EVENEMENT_DECONNEXION));
     }
     throw new ErreurApi(detail, code, reponse.status);
   }
@@ -70,6 +83,13 @@ function parametres(p: Record<string, string | undefined>): string {
 }
 
 export const api = {
+  connexion: (identifiant: string, mot_de_passe: string) =>
+    requete<Session>("/auth/connexion", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ identifiant, mot_de_passe }),
+    }),
+  moi: () => requete<{ identifiant: string; expire_le: number }>("/auth/moi"),
   sante: (signal?: AbortSignal) => requete<EtatSante>("/sante", { signal }),
   metriques: () => requete<Metriques>("/metriques"),
   rapportSecurite: () => requete<RapportSecurite>("/rapport-securite"),
