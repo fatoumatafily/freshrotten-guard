@@ -1,4 +1,4 @@
-# Dépendances d'exécution — versions épinglées (vérifiées par pip-audit, cf. scripts/verifier_dependances.ps1)
+# Dépendances d'exécution — versions épinglées (vérifiées par pip-audit : make audit)
 tensorflow==2.20.0
 # Keras 3.13.2 est OBLIGATOIRE : les modèles .keras ont été enregistrés avec cette version
 keras==3.13.2

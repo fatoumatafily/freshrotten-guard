@@ -1,5 +1,5 @@
 // Génération d'une attaque adversariale et comparaison visuelle base / robuste.
-import { Download, Swords } from "lucide-react";
+import { Download } from "lucide-react";
 import { useState } from "react";
 import { ErreurApi, api } from "../../api/client";
 import type { ModeAttaque, NomClasse, NomModele, PredictionAttaque, ResultatAttaque, TypeAttaque } from "../../api/types";
@@ -121,7 +121,6 @@ export function PanneauAttaque() {
             disabled={!fichier || chargement}
             className="inline-flex w-full items-center justify-center gap-2 rounded-xl bg-bouclier-600 px-4 py-3 font-semibold text-white shadow-sm hover:bg-bouclier-700 disabled:opacity-50 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-bouclier-600"
           >
-            <Swords size={18} aria-hidden="true" />
             {chargement ? "Attaque en cours…" : "Lancer l'attaque"}
           </button>
         </Carte>
@@ -175,7 +174,7 @@ function ColonneModele({ nom, r }: { nom: NomModele; r: ResultatAttaque }) {
         </figure>
         <figure>
           <Vignette src={m.image_attaquee} alt={`Image attaquée pour le modèle ${nom}`} />
-          <figcaption className="mt-1 text-xs text-slate-500 dark:text-slate-400">Image attaquée · L∞ = {m.norme_linf}</figcaption>
+          <figcaption className="mt-1 text-xs text-slate-500 dark:text-slate-400">Image attaquée (L∞ = {m.norme_linf})</figcaption>
         </figure>
       </div>
       <dl className="mt-4 space-y-2 text-sm">

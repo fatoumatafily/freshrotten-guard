@@ -77,20 +77,20 @@ export function TableauDeBord({ theme }: { theme: Theme }) {
       <div className="grid gap-6 xl:grid-cols-2">
         <Carte>
           <h3 className="font-semibold">Précision en fonction de ε</h3>
-          <p className="mb-3 text-sm text-slate-600 dark:text-slate-400">Trait plein : FGSM · pointillés : PGD. Le modèle de base s'effondre dès ε = 0,01.</p>
+          <p className="mb-3 text-sm text-slate-600 dark:text-slate-400">Trait plein : FGSM, pointillés : PGD. Le modèle de base s'effondre dès ε = 0,01.</p>
           <div className="h-72">
             <ResponsiveContainer>
-              <LineChart data={courbe} margin={{ top: 8, right: 16, bottom: 4, left: 0 }}>
+              <LineChart data={courbe} margin={{ top: 22, right: 16, bottom: 4, left: 0 }}>
                 <CartesianGrid stroke={c.grille} vertical={false} />
                 <XAxis dataKey="eps" {...axe} tickFormatter={(v: number) => v.toString().replace(".", ",")} />
                 <YAxis {...axe} domain={[0, 1]} tickFormatter={fmtPct} width={48} />
                 <Tooltip {...infobulle} labelFormatter={(v) => `ε = ${String(v).replace(".", ",")}`} />
                 <Legend wrapperStyle={{ fontSize: 12, color: c.texte }} />
                 <ReferenceLine x={0.03} stroke={c.texte} strokeDasharray="2 4" label={{ value: "ε entraînement", fill: c.texte, fontSize: 11, position: "top" }} />
-                <Line dataKey="robuste_fgsm" name="Robuste · FGSM" stroke={c.robuste} strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                <Line dataKey="robuste_pgd" name="Robuste · PGD" stroke={c.robuste} strokeWidth={2} strokeDasharray="6 4" dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                <Line dataKey="base_fgsm" name="Base · FGSM" stroke={c.base} strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
-                <Line dataKey="base_pgd" name="Base · PGD" stroke={c.base} strokeWidth={2} strokeDasharray="6 4" dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                <Line dataKey="robuste_fgsm" name="Robuste, FGSM" stroke={c.robuste} strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                <Line dataKey="robuste_pgd" name="Robuste, PGD" stroke={c.robuste} strokeWidth={2} strokeDasharray="6 4" dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                <Line dataKey="base_fgsm" name="Base, FGSM" stroke={c.base} strokeWidth={2} dot={{ r: 4 }} activeDot={{ r: 6 }} />
+                <Line dataKey="base_pgd" name="Base, PGD" stroke={c.base} strokeWidth={2} strokeDasharray="6 4" dot={{ r: 4 }} activeDot={{ r: 6 }} />
               </LineChart>
             </ResponsiveContainer>
           </div>
@@ -194,6 +194,15 @@ interface RapportModele {
   negatifs: Record<string, { n: number; fausses_acceptations: number }>;
 }
 
+const LIBELLES_NEGATIFS: Record<string, string> = {
+  synthetiques: "Images synthétiques (bruit, aplats, texte, dessins)",
+  cifar_personnes: "Personnes (CIFAR-100)",
+  cifar_animaux: "Animaux (CIFAR-100)",
+  cifar_vehicules: "Véhicules (CIFAR-100)",
+  cifar_autres_fruits_legumes: "Autres fruits et légumes (CIFAR-100)",
+  cifar_objets_scenes: "Objets et scènes (CIFAR-100)",
+};
+
 function Calibration({ calibration }: { calibration: Record<string, unknown> }) {
   const modeles = calibration.modeles as Record<string, RapportModele> | undefined;
   const r = modeles?.robuste;
@@ -202,8 +211,8 @@ function Calibration({ calibration }: { calibration: Record<string, unknown> }) 
     <Carte>
       <h3 className="font-semibold">Détection hors domaine (calibration du {String(calibration.date)})</h3>
       <p className="mb-3 text-sm text-slate-600 dark:text-slate-400">
-        Modèle robuste · seuils choisis sur une moitié du jeu de test, évalués sur l'autre moitié. Faux rejets d'images valides :{" "}
-        <strong>{pourcent(r.taux_faux_rejets)}</strong> · précision sur les images acceptées : <strong>{pourcent(r.precision_sur_acceptes)}</strong>{" "}
+        Modèle robuste, seuils choisis sur une moitié du jeu de test, évalués sur l'autre moitié. Faux rejets d'images valides :{" "}
+        <strong>{pourcent(r.taux_faux_rejets)}</strong>, précision sur les images acceptées : <strong>{pourcent(r.precision_sur_acceptes)}</strong>{" "}
         (sans filtre : {pourcent(r.precision_sans_filtre)}).
       </p>
       <div className="overflow-x-auto">
@@ -218,7 +227,7 @@ function Calibration({ calibration }: { calibration: Record<string, unknown> }) 
           <tbody className="tabular-nums">
             {Object.entries(r.negatifs).map(([g, v]) => (
               <tr key={g} className="border-b border-slate-100 dark:border-slate-800">
-                <th scope="row" className="py-2 pr-3 text-left font-normal">{g.replace(/^cifar_/, "CIFAR-100 · ").replace(/_/g, " ")}</th>
+                <th scope="row" className="py-2 pr-3 text-left font-normal">{LIBELLES_NEGATIFS[g] ?? g.replace(/_/g, " ")}</th>
                 <td className="py-2 pr-3 text-right">{v.n}</td>
                 <td className="py-2 text-right font-medium">{pourcent(v.fausses_acceptations)}</td>
               </tr>

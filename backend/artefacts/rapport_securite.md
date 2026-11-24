@@ -1,6 +1,6 @@
 # Rapport de la suite de tests de sécurité — FreshRotten Guard
 
-Généré le 2026-11-21 01:48:00 par `make test-securite`. **75/75 scénarios réussis.**
+Généré le 2026-11-21 10:50:21 par `make test-securite`. **75/75 scénarios réussis.**
 
 ## Serveur web et API
 
@@ -15,7 +15,7 @@ Généré le 2026-11-21 01:48:00 par `make test-securite`. **75/75 scénarios r�
 | Endpoints d'attaque plus limités que l'analyse | limite attaque < limite analyse | attaque 12/minute, comparer 60/minute, analyse 240/minute | ✅ |
 | Messages d'erreur sans détail interne | Aucune trace, aucun écho des entrées | 404 → « Ressource introuvable. », 422 → « Paramètres invalides. » | ✅ |
 | Exception interne | 500 générique, pile d'appels seulement dans les logs | HTTP 500 : Erreur interne du serveur. | ✅ |
-| Journalisation des rejets | Événement JSON, IP hachée, ni image ni nom de fichier | Journal : {"horodatage": "2026-11-21T01:47:23+00:00", "evenement": "rejet_fichier", "ip_hachee": "26cabf1c6764ae67", "code": "script", "taille": 34} | ✅ |
+| Journalisation des rejets | Événement JSON, IP hachée, ni image ni nom de fichier | Journal : {"horodatage": "2026-11-21T10:50:09+00:00", "evenement": "rejet_fichier", "ip_hachee": "6739a3c3b736754e", "code": "script", "taille": 34} | ✅ |
 | Déni de service : file d'inférence saturée / inférence trop longue | 503 immédiat | File pleine → serveur_occupe, délai dépassé → delai_depasse | ✅ |
 | Documentation API (Swagger) | Schéma OpenAPI disponible et validé | 10 routes documentées | ✅ |
 
@@ -80,12 +80,12 @@ Généré le 2026-11-21 01:48:00 par `make test-securite`. **75/75 scénarios r�
 
 | Scénario | Attendu | Obtenu | Résultat |
 |---|---|---|---|
-| Photo valide : apple_fresh | Accepté : apple_fresh | Accepté : apple_fresh (0.928) | ✅ |
-| Photo valide : apple_rotten | Accepté : apple_rotten | Accepté : apple_rotten (0.955) | ✅ |
-| Photo valide : banana_fresh | Accepté : banana_fresh | Accepté : banana_fresh (0.998) | ✅ |
+| Photo valide : apple_fresh | Accepté : apple_fresh | Accepté : apple_fresh (0.999) | ✅ |
+| Photo valide : apple_rotten | Accepté : apple_rotten | Accepté : apple_rotten (0.949) | ✅ |
+| Photo valide : banana_fresh | Accepté : banana_fresh | Accepté : banana_fresh (1.0) | ✅ |
 | Photo valide : banana_rotten | Accepté : banana_rotten | Accepté : banana_rotten (1.0) | ✅ |
-| Photo valide : orange_fresh | Accepté : orange_fresh | Accepté : orange_fresh (0.997) | ✅ |
-| Photo valide : orange_rotten | Accepté : orange_rotten | Accepté : orange_rotten (0.706) | ✅ |
+| Photo valide : orange_fresh | Accepté : orange_fresh | Accepté : orange_fresh (0.999) | ✅ |
+| Photo valide : orange_rotten | Accepté : orange_rotten | Accepté : orange_rotten (1.0) | ✅ |
 
 ## Formats particuliers
 
@@ -102,8 +102,8 @@ Généré le 2026-11-21 01:48:00 par `make test-securite`. **75/75 scénarios r�
 | Scénario | Attendu | Obtenu | Résultat |
 |---|---|---|---|
 | PGD ε=0,03 contre le modèle de base | Le modèle de base est trompé | Trompé : prédit apple_rotten (1.00) | ✅ |
-| PGD ε=0,03 contre le modèle robuste | Le modèle robuste résiste | Résiste : prédit apple_fresh (0.55) | ✅ |
-| PGD ciblée : banane pourrie → « fraîche » (base) | Le modèle de base est trompé (cible atteinte) | Cible atteinte : prédit banana_fresh (0.65) | ✅ |
+| PGD ε=0,03 contre le modèle robuste | Le modèle robuste résiste | Résiste : prédit apple_fresh (0.99) | ✅ |
+| PGD ciblée : banane pourrie → « fraîche » (base) | Le modèle de base est trompé (cible atteinte) | Cible atteinte : prédit banana_fresh (0.86) | ✅ |
 | PGD ciblée : banane pourrie → « fraîche » (robuste) | Le modèle robuste résiste (cible manquée) | Cible manquée : prédit banana_rotten (1.00) | ✅ |
 | Détection d'une image adverse (base, PGD ε=0,03) | Image signalée (manipulée) ou rejetée | Signalée (ok, alertes : ['image_possiblement_manipulee']) | ✅ |
 | Purification JPEG contre PGD ε=0,02 (base) | Trompé sans défense, prédiction correcte restaurée avec JPEG | Sans purification : apple_rotten → avec JPEG : apple_fresh (1.00) | ✅ |
@@ -118,11 +118,11 @@ Généré le 2026-11-21 01:48:00 par `make test-securite`. **75/75 scénarios r�
 
 | Scénario | Attendu | Obtenu | Résultat |
 |---|---|---|---|
-| Miroir horizontal (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (0.696) | ✅ |
-| Rotation 20° (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (0.532) | ✅ |
-| Luminosité −35 % (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (0.654) | ✅ |
-| Contraste +50 % (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (0.548) | ✅ |
-| Flou gaussien r=2 (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (0.707) | ✅ |
-| Bruit gaussien σ=12 (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (0.657) | ✅ |
-| Compression JPEG forte (q=15) (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (0.68) | ✅ |
-| Recadrage 80 % centré (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (0.796) | ✅ |
+| Miroir horizontal (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (1.0) | ✅ |
+| Rotation 20° (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (1.0) | ✅ |
+| Luminosité −35 % (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (0.915) | ✅ |
+| Contraste +50 % (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (1.0) | ✅ |
+| Flou gaussien r=2 (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (1.0) | ✅ |
+| Bruit gaussien σ=12 (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (1.0) | ✅ |
+| Compression JPEG forte (q=15) (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (1.0) | ✅ |
+| Recadrage 80 % centré (orange pourrie) | Toujours « orange_rotten » | Accepté : orange_rotten (1.0) | ✅ |

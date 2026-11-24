@@ -32,7 +32,12 @@ class Parametres(BaseSettings):
     """Paramètres de l'application (surchargés par variables d'environnement)."""
 
     model_config = SettingsConfigDict(
-        env_prefix="FRG_", env_file=RACINE_PROJET / ".env", env_file_encoding="utf-8", extra="ignore"
+        env_prefix="FRG_",
+        env_file=RACINE_PROJET / ".env",
+        env_file_encoding="utf-8",
+        extra="ignore",
+        # « FRG_SEL_HACHAGE_IP= » (vide, comme dans .env.example) = valeur par défaut, pas une chaîne vide.
+        env_ignore_empty=True,
     )
 
     # --- Modèles -----------------------------------------------------------

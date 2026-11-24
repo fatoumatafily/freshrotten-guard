@@ -196,7 +196,7 @@ export function PageWebcam() {
           <CarteResultat resultat={fige.resultat} titre="Instant figé" detailsOuverts />
         ) : (
           <Carte>
-            <h2 className="mb-3 text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">En direct</h2>
+            <h2 className="mb-3 font-semibold">En direct</h2>
             <div aria-live="polite" aria-atomic="true">
               {!verdict || !typeAffiche ? (
                 <p className="text-slate-600 dark:text-slate-400">{enPause ? "En pause." : "Analyse en cours…"}</p>
@@ -241,7 +241,6 @@ function EcranAutorisation({ etat, onDemarrer }: { etat: EtatCamera; onDemarrer:
   const m = messages[etat];
   return (
     <Carte className="mx-auto max-w-2xl space-y-4 text-center">
-      <Camera size={44} className="mx-auto text-frais-600" aria-hidden="true" />
       <h2 className="text-xl font-semibold">Analyse en direct par webcam</h2>
       <p className="text-slate-600 dark:text-slate-300">
         La caméra sert uniquement à analyser le fruit placé dans le cadre de visée. Seule cette zone est envoyée, une image

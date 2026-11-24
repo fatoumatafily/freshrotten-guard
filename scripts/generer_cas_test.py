@@ -5,7 +5,7 @@
 * ``tests/data/generes/formats_particuliers/`` : transparence, CMJN, 16 bits, EXIF.
 * ``tests/data/generes/hors_domaine/`` : noir, blanc, bruit, texte, dessins, visage.
 * ``tests/data/generes/adverses/`` : images attaquées (PGD/FGSM) prêtes à réuploader.
-* ``tests/data/fruits/<classe>.png`` (avec ``--dataset``) : une photo de démonstration
+* ``tests/data/fruits/<classe>.<ext>`` (avec ``--dataset``) : une photo de démonstration
   par classe, copiée du jeu de **test** (première image, par ordre alphabétique,
   correctement classée et acceptée par les défenses).
 
@@ -81,7 +81,11 @@ def copier_fruits(dataset: Path) -> None:
             base = analyser(ctx, image, "base")
             robuste = analyser(ctx, image, "robuste")
             if base.classe == classe and robuste.classe == classe and robuste.statut == "ok" and base.statut == "ok":
-                shutil.copyfile(chemin, DONNEES / "fruits" / f"{classe}.png")
+                # On garde l'extension d'origine (le dataset contient des JPEG et des PNG) et on
+                # supprime une éventuelle ancienne copie dans un autre format.
+                for ancienne in (DONNEES / "fruits").glob(f"{classe}.*"):
+                    ancienne.unlink()
+                shutil.copyfile(chemin, DONNEES / "fruits" / f"{classe}{chemin.suffix.lower()}")
                 print(f"{classe}: {chemin.name} (confiance robuste {robuste.confiance})")
                 x = vers_tenseur_modele(image)
                 k = ctx.modeles.info.classes.index(classe)

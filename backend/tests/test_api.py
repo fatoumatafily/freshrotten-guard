@@ -125,3 +125,12 @@ def test_scenarios_liste(client):
     data = client.get("/api/scenarios").json()
     assert len(data) > 30
     assert {"id", "categorie", "titre", "attendu", "disponible"} <= set(data[0])
+
+
+def test_variable_vide_garde_la_valeur_par_defaut(monkeypatch):
+    """« FRG_SEL_HACHAGE_IP= » vide ne doit pas donner un sel vide (IP hachées devinables)."""
+    from app.config import Parametres
+
+    monkeypatch.setenv("FRG_SEL_HACHAGE_IP", "")
+    sel = Parametres().sel_hachage_ip
+    assert len(sel) == 32

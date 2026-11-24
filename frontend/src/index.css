@@ -18,3 +18,9 @@
     }
   }
 }
+
+/* Après les utilitaires Tailwind : les chiffres à chasse fixe de Schibsted Grotesk
+   espacent trop la ponctuation (« 100 , 0 % »). */
+.tabular-nums {
+  font-variant-numeric: normal;
+}

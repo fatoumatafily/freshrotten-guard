@@ -1,5 +1,6 @@
 # Image du backend FreshRotten Guard (contexte de build : racine du projet).
-# Compatible Hugging Face Spaces (utilisateur 1000, port 7860) et docker compose.
+# Compatible Hugging Face Spaces (utilisateur 1000, port 7860).
+# Construction locale : docker build -f backend/Dockerfile -t freshrotten-guard .
 FROM python:3.11-slim
 
 ENV PYTHONDONTWRITEBYTECODE=1 \

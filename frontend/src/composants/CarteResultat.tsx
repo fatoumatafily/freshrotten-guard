@@ -1,7 +1,7 @@
 // Carte de résultat : verdict en grand, confiance, alertes, détails repliables.
 import { ChevronDown, CircleCheck, CircleX, ShieldAlert } from "lucide-react";
 import type { ResultatAnalyse } from "../api/types";
-import { ALERTES, CONTROLES, ETATS, FRUITS, libelleClasse } from "../lib/libelles";
+import { ALERTES, CONTROLES, libelleClasse } from "../lib/libelles";
 import { JaugeConfiance } from "./JaugeConfiance";
 import { Probabilites } from "./Probabilites";
 import { typeVerdict } from "../lib/libelles";
@@ -15,18 +15,17 @@ interface Props {
 
 export function CarteResultat({ resultat, titre, detailsOuverts = false }: Props) {
   const type = typeVerdict(resultat.statut, resultat.etat);
-  const fruit = resultat.fruit ? FRUITS[resultat.fruit] : null;
   const alertesAffichees = resultat.alertes.filter((a) => ALERTES[a]);
   const brute = Object.entries(resultat.probabilites).sort((a, b) => b[1] - a[1])[0];
 
   return (
     <article className="animate-apparition rounded-2xl border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900">
-      {titre && <h3 className="mb-3 text-sm font-medium uppercase tracking-wide text-slate-500 dark:text-slate-400">{titre}</h3>}
+      {titre && <h3 className="mb-3 font-semibold">{titre}</h3>}
       <div className="flex flex-wrap items-center gap-3">
         <BadgeVerdict type={type} taille="lg" />
         {resultat.statut === "ok" ? (
           <p className="text-2xl font-bold">
-            {fruit} <span className="font-normal text-slate-500 dark:text-slate-400">·</span> {ETATS[resultat.etat ?? ""]}
+            {resultat.classe ? libelleClasse(resultat.classe) : null}
           </p>
         ) : (
           <p className="text-xl font-semibold">Aucun fruit pris en charge détecté</p>

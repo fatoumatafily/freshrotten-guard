@@ -1,5 +1,5 @@
 // Coque de l'application : en-tête, onglets accessibles, thème, état du serveur.
-import { Camera, FlaskConical, Info, LogOut, Moon, ServerOff, ShieldCheck, Sun, Upload } from "lucide-react";
+import { Moon, ServerOff, Sun } from "lucide-react";
 import { Suspense, lazy, useEffect, useRef, useState, type KeyboardEvent } from "react";
 import { api } from "./api/client";
 import type { EtatSante } from "./api/types";
@@ -15,10 +15,10 @@ import { useTheme } from "./lib/theme";
 const PageLaboratoire = lazy(() => import("./pages/PageLaboratoire").then((m) => ({ default: m.PageLaboratoire })));
 
 const ONGLETS = [
-  { id: "webcam", titre: "Webcam", Icone: Camera },
-  { id: "analyse", titre: "Analyser une image", Icone: Upload },
-  { id: "labo", titre: "Laboratoire de sécurité", Icone: FlaskConical },
-  { id: "apropos", titre: "À propos", Icone: Info },
+  { id: "webcam", titre: "Webcam" },
+  { id: "analyse", titre: "Analyser une image" },
+  { id: "labo", titre: "Laboratoire de sécurité" },
+  { id: "apropos", titre: "À propos" },
 ] as const;
 type IdOnglet = (typeof ONGLETS)[number]["id"];
 
@@ -101,27 +101,27 @@ function Application({
       <a href="#contenu" className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-50 focus:rounded-lg focus:bg-white focus:px-4 focus:py-2 focus:text-slate-900">
         Aller au contenu
       </a>
-      <header className="border-b border-slate-200 bg-white/80 backdrop-blur dark:border-slate-800 dark:bg-slate-950/80">
+      <header className="border-b border-slate-200 bg-white dark:border-slate-800 dark:bg-slate-950">
         <div className="mx-auto flex max-w-7xl flex-wrap items-center gap-4 px-4 py-4 sm:px-6">
-          <div className="flex items-center gap-2.5">
-            <span className="grid h-10 w-10 place-items-center rounded-xl bg-frais-600 text-white shadow-sm">
-              <ShieldCheck aria-hidden="true" />
-            </span>
-            <div>
-              <h1 className="text-lg font-bold leading-tight">FreshRotten Guard</h1>
-              <p className="text-xs text-slate-500 dark:text-slate-400">Fruit frais ou pourri · IA défendue</p>
-            </div>
+          <div>
+            <h1 className="text-xl font-bold tracking-tight">
+              <span className="text-frais-600 dark:text-frais-300">Fresh</span>
+              <span className="text-pourri-600 dark:text-pourri-300">Rotten</span> Guard
+            </h1>
+            <p className="text-sm text-slate-500 dark:text-slate-400">Pomme, banane, orange : fraîche ou pourrie ?</p>
           </div>
-          <IndicateurServeur sante={sante} />
-          <span className="ml-auto hidden text-sm text-slate-600 sm:inline dark:text-slate-300">
-            Connecté : <strong>{session.identifiant}</strong>
+          <div className="ml-auto">
+            <IndicateurServeur sante={sante} />
+          </div>
+          <span className="hidden text-sm text-slate-600 sm:inline dark:text-slate-300">
+            {session.identifiant}
           </span>
           <button
             type="button"
             onClick={onDeconnexion}
-            className="inline-flex items-center gap-1.5 rounded-lg px-3 py-2 text-sm font-medium text-slate-700 ring-1 ring-slate-200 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-bouclier-500 dark:text-slate-200 dark:ring-slate-700 dark:hover:bg-slate-800"
+            className="rounded-lg px-3 py-1.5 text-sm font-medium text-slate-700 ring-1 ring-slate-300 hover:bg-slate-100 focus-visible:outline focus-visible:outline-2 focus-visible:outline-bouclier-500 dark:text-slate-200 dark:ring-slate-700 dark:hover:bg-slate-800"
           >
-            <LogOut size={16} aria-hidden="true" /> Se déconnecter
+            Se déconnecter
           </button>
           <button
             type="button"
@@ -134,7 +134,7 @@ function Application({
         </div>
         <nav className="mx-auto max-w-7xl overflow-x-auto px-4 sm:px-6" aria-label="Navigation principale">
           <div role="tablist" className="flex gap-1">
-            {ONGLETS.map(({ id, titre, Icone }, i) => (
+            {ONGLETS.map(({ id, titre }, i) => (
               <button
                 key={id}
                 ref={(el) => {
@@ -148,13 +148,12 @@ function Application({
                 tabIndex={onglet === id ? 0 : -1}
                 onClick={() => setOnglet(id)}
                 onKeyDown={(e) => clavier(e, i)}
-                className={`inline-flex items-center gap-2 whitespace-nowrap border-b-2 px-3 py-3 text-sm font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-bouclier-500 ${
+                className={`whitespace-nowrap border-b-2 px-3 py-3 text-[15px] font-medium transition focus-visible:outline focus-visible:outline-2 focus-visible:-outline-offset-2 focus-visible:outline-bouclier-500 ${
                   onglet === id
-                    ? "border-frais-600 text-frais-700 dark:border-frais-300 dark:text-frais-300"
+                    ? "border-slate-900 text-slate-900 dark:border-slate-100 dark:text-slate-100"
                     : "border-transparent text-slate-600 hover:text-slate-900 dark:text-slate-400 dark:hover:text-slate-100"
                 }`}
               >
-                <Icone size={16} aria-hidden="true" />
                 {titre}
               </button>
             ))}
@@ -165,7 +164,7 @@ function Application({
       {sante === "hors_ligne" && (
         <div role="alert" className="bg-pourri-600 px-4 py-2 text-center text-sm font-medium text-white">
           <ServerOff size={16} className="mr-2 inline" aria-hidden="true" />
-          Serveur indisponible : lancez le backend (voir README), la page se reconnectera automatiquement.
+          Serveur indisponible : lancez le backend (voir README.md), la page se reconnectera automatiquement.
         </div>
       )}
 
@@ -190,11 +189,11 @@ function IndicateurServeur({ sante }: { sante: EtatSante | null | "hors_ligne" }
   if (sante === null) return null;
   const ok = sante !== "hors_ligne" && sante.statut === "ok";
   const texte =
-    sante === "hors_ligne" ? "Serveur hors ligne" : sante.statut === "ok" ? `Modèle ${sante.modele_actif} · défenses actives` : "Seuils non calibrés";
+    sante === "hors_ligne" ? "Serveur hors ligne" : sante.statut === "ok" ? `Modèle ${sante.modele_actif}, défenses actives` : "Seuils non calibrés";
   return (
     <span
-      className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
-        ok ? "bg-frais-50 text-frais-700 dark:bg-frais-900/40 dark:text-frais-300" : "bg-pourri-50 text-pourri-700 dark:bg-pourri-900/40 dark:text-pourri-300"
+      className={`inline-flex items-center gap-1.5 text-sm ${
+        ok ? "text-slate-600 dark:text-slate-300" : "text-pourri-700 dark:text-pourri-300"
       }`}
     >
       <span className={`h-2 w-2 rounded-full ${ok ? "bg-frais-500" : "bg-pourri-500"}`} aria-hidden="true" />

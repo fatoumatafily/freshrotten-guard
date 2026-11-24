@@ -1,5 +1,4 @@
 // Onglet « Analyser une image » : upload, options, verdict, comparaison des modèles.
-import { Scale, Sparkles } from "lucide-react";
 import { useState } from "react";
 import { ErreurApi, api } from "../api/client";
 import type { Purification, ResultatAnalyse, ResultatComparaison } from "../api/types";
@@ -56,14 +55,14 @@ export function PageAnalyse() {
             />
             <span>
               <span className="flex items-center gap-1.5 font-medium">
-                <Scale size={16} aria-hidden="true" /> Comparer les deux modèles
+                Comparer les deux modèles
               </span>
               <span className="text-sm text-slate-600 dark:text-slate-400">Modèle de base (99,7 %, fragile) et robuste (96,2 %, défendu).</span>
             </span>
           </label>
           <div>
             <label htmlFor="purification" className="flex items-center gap-1.5 font-medium">
-              <Sparkles size={16} aria-hidden="true" /> Purification d'entrée
+              Purification d'entrée
             </label>
             <select
               id="purification"

@@ -23,7 +23,8 @@ export function RapportSecurite() {
         {rapport.reussis} / {rapport.total} <span className="text-base font-normal">scénarios réussis</span>
       </p>
       <p className="text-sm text-slate-600 dark:text-slate-400">
-        {rapport.limites_connues ?? 0} limite(s) connue(s) documentée(s) · {echecs} échec(s) inattendu(s)
+        {echecs === 0 ? "Aucun échec." : `${echecs} échec${echecs > 1 ? "s" : ""}.`}
+        {(rapport.limites_connues ?? 0) > 0 && ` ${rapport.limites_connues} limite(s) connue(s) documentée(s).`}
       </p>
       <details className="mt-3">
         <summary className="cursor-pointer text-sm font-medium text-bouclier-600 hover:underline dark:text-bouclier-300">Voir le détail</summary>

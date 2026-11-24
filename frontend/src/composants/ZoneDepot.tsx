@@ -70,7 +70,7 @@ export function ZoneDepot({ fichier, onChange, libelle = "Déposez une image de 
           {fichier ? "Changer d'image" : "Choisir un fichier"}
         </button>
         <p id={idAide} className="text-xs text-slate-500 dark:text-slate-400">
-          JPEG, PNG ou WebP · 5 Mo maximum · glisser-déposer accepté
+          JPEG, PNG ou WebP, 5 Mo maximum. Vous pouvez aussi glisser la photo ici.
         </p>
         <input
           ref={entree}

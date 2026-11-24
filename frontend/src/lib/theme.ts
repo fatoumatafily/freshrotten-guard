@@ -23,6 +23,7 @@ export function useTheme(): [Theme, () => void] {
 
 /** Couleurs des séries de graphiques, validées (daltonisme, contraste) pour chaque thème. */
 export const SERIES: Record<Theme, { base: string; robuste: string; grille: string; texte: string }> = {
-  clair: { base: "#c2410c", robuste: "#4f46e5", grille: "#e2e8f0", texte: "#475569" },
-  sombre: { base: "#ea580c", robuste: "#6366f1", grille: "#334155", texte: "#cbd5e1" },
+  // Robuste = vert foncé, base = ambre clair : écart de clarté net (lisible en daltonisme et en niveaux de gris).
+  clair: { base: "#d4892f", robuste: "#2f6f2a", grille: "#e3e6de", texte: "#474d42" },
+  sombre: { base: "#e0a052", robuste: "#8cc47e", grille: "#3b4036", texte: "#c3c8bb" },
 };
